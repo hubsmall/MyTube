@@ -8,6 +8,7 @@ use App\Models\Video;
 use Illuminate\Http\Request;
 use Alaouy\Youtube\Facades\Youtube;
 
+
 class ChanelController extends Controller
 {
     /**
@@ -15,36 +16,23 @@ class ChanelController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    
     public function index()
     {
-        $chanels = Chanel::all();
-        foreach ($chanels as  $chanel) {
-            $playlists = Playlist::where('chanel_id', $chanel->id)->get();
-            foreach ($playlists as $playlist) {
-                echo "<br>";echo "<br>";echo "<br>";echo "<br>";
-                echo "<br>";echo "<br>";echo "<br>";echo "<br>";
-                echo "=========================================";
-                echo $playlist->name;
-                echo "=========================================";echo "<br>";echo "<br>";           
-                $videos = Video::where('playlist_id', $playlist->id)->get();
-                foreach ($videos as $video) {
-                    echo "****************************************";
-                    echo $video->name;
-                    echo "****************************************";
-                    echo "<br>";echo "<br>";echo "<br>";echo "<br>";
-                }
-            }
-        }
+        
 
-        //$chanels = Chanel::all();
-        // foreach ($chanels as  $chanel) {
-        //     echo $chanel->name;
-        //     echo "****************************************";
-        //     echo "<br>";echo "<br>";echo "<br>";echo "<br>";
-        // }
-        // return view('home.index', [
-        //     'chanels' => $chanels,
-        // ]);
+        $chanels = Chanel::all();
+
+        $latestVideos = Video::orderBy('original_date', 'desc')
+               ->take(6)
+               ->get();
+
+  
+        return view('home.index', [
+            'chanels' => $chanels,
+            'latestVideos' => $latestVideos,
+        ]);
     }
 
     /**
@@ -76,7 +64,7 @@ class ChanelController extends Controller
      */
     public function show(Chanel $chanel)
     {
-        //
+
     }
 
     /**

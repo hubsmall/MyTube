@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'MyTube') }}</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -19,6 +19,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/myStyle.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -37,18 +38,7 @@
                     <ul class="navbar-nav mr-auto">
                         @foreach ($chanels as $chanel)
                         <li class="nav-item">
-                            <!-- <a class="nav-link" href="{{ route('sections.index', [ $chanel]) }}">{{$chanel->name}}</a> -->
-
-                            <form
-                        
-                              action="{{ route('chanels.playlists.index', [ $chanel]) }}" method="GET">
-                            {{ csrf_field() }}
-
-                            <button type="submit">
-                                <i class="fa fa-btn fa-trash">{{$chanel->name}}</i>
-                            </button>
-                        </form>
-
+                             <a class="nav-link" href="{{ route('chanels.playlists.index', [ $chanel]) }}">{{$chanel->name}}</a>
                         </li>
                              
                         @endforeach

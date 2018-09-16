@@ -20,6 +20,9 @@ class CreateVideosTable extends Migration
             $table->string('preview');
             $table->unsignedInteger('playlist_id');
             $table->longText('description');
+            $table->longText('tags')->nullable();
+            $table->text('player');
+            $table->dateTime('original_date');
             $table->string('youtube_id');
             $table->foreign('playlist_id')
                     ->references('id')->on('playlists')

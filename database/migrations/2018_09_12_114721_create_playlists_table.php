@@ -16,8 +16,8 @@ class CreatePlaylistsTable extends Migration
         Schema::create('playlists', function (Blueprint $table) {
             $table->engine = 'InnoDB';   
             $table->increments('id');
-            $table->string('name')->unique();
-            $table->string('youtube_id');
+            $table->string('name');
+            $table->string('youtube_id')->nullable();
             $table->unsignedInteger('chanel_id');
             $table->foreign('chanel_id')
                     ->references('id')->on('chanels')

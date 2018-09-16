@@ -1,0 +1,23 @@
+.wrapper{
+	margin: 20px;
+}
+.video_continer{
+	display: flex;
+	flex-direction: row;
+
+}
+.video_item{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	margin-right: 10px;
+}
+.video_element{
+	margin: auto;
+}
+.video_preview {
+	cursor: pointer;
+}
+.video_name{
+	text-align: center;
+}

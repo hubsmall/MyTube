@@ -40,7 +40,17 @@ class PlaylistController extends Controller
 
     public function index(Chanel $chanel)
     {
-        print_r($chanel->id);
+        $chanels = Chanel::all();
+        
+
+        $playlists = Playlist::where('chanel_id', $chanel->id)->get();
+
+        //dd($playlists);
+
+        return view('playlists.index', [
+            'chanels' => $chanels,
+            'playlists' => $playlists,
+        ]);
     }
 
     /**
