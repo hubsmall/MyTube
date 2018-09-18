@@ -22,17 +22,7 @@ class ChanelController extends Controller
     {
         
 
-        $chanels = Chanel::all();
-
-        $latestVideos = Video::orderBy('original_date', 'desc')
-               ->take(6)
-               ->get();
-
-  
-        return view('home.index', [
-            'chanels' => $chanels,
-            'latestVideos' => $latestVideos,
-        ]);
+        echo "string";
     }
 
     /**
@@ -62,9 +52,15 @@ class ChanelController extends Controller
      * @param  \App\Models\Chanel  $chanel
      * @return \Illuminate\Http\Response
      */
-    public function show(Chanel $chanel)
+    public function show(Chanel $chanel, Video $video)
     {
-
+        $chanels = Chanel::all();
+        $randomVideos = Video::with('playlist.chanel:id,name')->orderBy(\DB::raw('RAND()'))->take(6)->get();
+        return view('chanels_playlists_videos.show', [
+            'chanels' => $chanels,
+            'video' => $video,
+            'randomVideos' => $randomVideos,
+        ]);
     }
 
     /**

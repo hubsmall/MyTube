@@ -66,7 +66,7 @@ namespace App\DifInTime;
 				$my_time_string = round($dif/60/60) . ' часов назад';
 			} 
 		}
-		else if($dif >= 86400) {
+		else if($dif >= 86400 && $dif < 2592000) {
 			// но тут внутри надо проверть чтобы поставить падеж правильный 
 			//$my_time_string = round($dif/60/60/24) . ' дней назад';
 			if(round($dif/60/60/24) % 10 === 1){
@@ -80,6 +80,34 @@ namespace App\DifInTime;
 			}
 			if((round($dif/60/60/24)  >= 11 && round($dif/60/60/24)  <= 20) ){
 				$my_time_string = round($dif/60/60/24) . ' дней назад';
+			}
+		}
+		else if($dif >= 2592000 && $dif < 31104000) {
+			if(round($dif/60/60/24/30) % 10 === 1){
+				$my_time_string = round($dif/60/60/24/30) . ' месяц назад';
+			}
+			else if(round($dif/60/60/24/30) % 10 >= 2 && round($dif/60/60/24/30) % 10 <= 4){
+				$my_time_string = round($dif/60/60/24/30) . ' месяца назад';
+			}
+			else if((round($dif/60/60/24/30) % 10 >= 5 && round($dif/60/60/24/30) % 10 <= 9) || round($dif/60/60/24/30) % 10 === 0){
+				$my_time_string = round($dif/60/60/24/30) . ' месяцев назад';
+			}
+			if((round($dif/60/60/24/30)  >= 11 && round($dif/60/60/24/30)  <= 20) ){
+				$my_time_string = round($dif/60/60/24/30) . ' месяцев назад';
+			}
+		}
+		else if($dif >= 31104000) {
+			if(round($dif/60/60/24/30/12) % 10 === 1){
+				$my_time_string = round($dif/60/60/24/30/12) . ' год назад';
+			}
+			else if(round($dif/60/60/24/30/12) % 10 >= 2 && round($dif/60/60/24/30/12) % 10 <= 4){
+				$my_time_string = round($dif/60/60/24/30/12) . ' года назад';
+			}
+			else if((round($dif/60/60/24/30/12) % 10 >= 5 && round($dif/60/60/24/30/12) % 10 <= 9) || round($dif/60/60/24/30/12) % 10 === 0){
+				$my_time_string = round($dif/60/60/24/30/12) . ' лет назад';
+			}
+			if((round($dif/60/60/24/30/12)  >= 11 && round($dif/60/60/24/30/12)  <= 20) ){
+				$my_time_string = round($dif/60/60/24/30/12) . ' лет назад';
 			}
 		}
 		return $my_time_string;

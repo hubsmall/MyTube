@@ -41,11 +41,8 @@ class PlaylistController extends Controller
     public function index(Chanel $chanel)
     {
         $chanels = Chanel::all();
-        
-
         $playlists = Playlist::where('chanel_id', $chanel->id)->get();
 
-        //dd($playlists);
 
         return view('playlists.index', [
             'chanels' => $chanels,
@@ -77,10 +74,10 @@ class PlaylistController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Section  $section
+     * @param  \App\Models\Playlist  $playlist
      * @return \Illuminate\Http\Response
      */
-    public function show(Section $section)
+    public function show(Playlist $playlist)
     {
         //
     }
@@ -88,10 +85,10 @@ class PlaylistController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Section  $section
+     * @param  \App\Models\Playlist  $playlist
      * @return \Illuminate\Http\Response
      */
-    public function edit(Section $section)
+    public function edit(Playlist $playlist)
     {
         //
     }
@@ -100,10 +97,10 @@ class PlaylistController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Section  $section
+     * @param  \App\Models\Playlist  $playlist
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Section $section)
+    public function update(Request $request, Playlist $playlist)
     {
         //
     }
@@ -111,10 +108,10 @@ class PlaylistController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Section  $section
+     * @param  \App\Models\Playlist  $playlist
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Section $section)
+    public function destroy(Playlist $playlist)
     {
         //
     }

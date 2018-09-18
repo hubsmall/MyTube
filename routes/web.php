@@ -11,15 +11,14 @@
 |
 */
 
-// Route::get('/', function () {
-//     return view('home');
-// });
-Route::redirect('/', 'chanels', 301);
-Route::redirect('/home', 'chanels', 301);
+
+Route::redirect('/', 'home', 301);
 
 Route::resource('chanels.playlists', 'PlaylistController');
+Route::resource('chanels.playlists.videos', 'VideoController');
+Route::resource('chanels.videos', 'ChanelController');
 
 
 Route::apiResources([
-    'chanels' => 'ChanelController',
+    'home' => 'HomeController',
 ]);

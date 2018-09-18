@@ -9,8 +9,15 @@
 	    	@foreach ($latestVideos as $latestVideo)
 	    	<div class="video_item">
 	    		<div class="video_element video_preview"><img src="{{$latestVideo->preview}}"></div>
-	    		<div class="video_element video_name"><span>{{$latestVideo->name}}</span></div>
-	    		<div class="video_element video_date">{{$latestVideo->difInTime}}</div>
+	    		<div class="video_element video_name">
+                    <a href="{{ route('chanels.videos.show', [ $latestVideo->playlist->chanel->id, $latestVideo]) }}">{{$latestVideo->name}}</a>
+                </div> 
+	    		<div class="video_element video_date">{{$latestVideo->difInTimeCarbon}}</div>
+	    		<div class="video_element video_date">                  
+                    <a class="nav-link" href="{{ route('chanels.playlists.index', [ $latestVideo->playlist->chanel->id]) }}">
+                    {{$latestVideo->playlist->chanel->name}}
+                    </a>
+                </div>
 	    	</div>
 	    	@endforeach
 	    </div>

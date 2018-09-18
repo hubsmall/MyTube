@@ -2,30 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Playlist;
 use App\Models\Chanel;
 use App\Models\Video;
+use Illuminate\Http\Request;
 
-class HomeController extends Controller
+class VideoController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Chanel $chanel, Playlist $playlist)
     {
         $chanels = Chanel::all();
+        $videos = Video::where('playlist_id', $playlist->id)->orderBy('original_date', 'desc')->get();
 
-        $latestVideos = Video::with('playlist.chanel:id,name')->orderBy('original_date', 'desc')
-               ->take(6)
-               ->get();
-
-  
-        return view('home.index', [
+        return view('chanels_playlists_videos.index', [
             'chanels' => $chanels,
-            'latestVideos' => $latestVideos,
+            'videos' => $videos,
+            'playlist' => $playlist,
         ]);
     }
 
@@ -53,21 +50,28 @@ class HomeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Chanel $chanel, Playlist $playlist, Video $video)
     {
-        //
+        $chanels = Chanel::all();
+        $randomVideos = Video::with('playlist.chanel:id,name')->orderBy(\DB::raw('RAND()'))->take(6)->get();
+        return view('chanels_playlists_videos.show', [
+            'chanels' => $chanels,
+            'video' => $video,
+            'playlist' => $playlist,
+            'randomVideos' => $randomVideos,
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Video $video)
     {
         //
     }
@@ -76,10 +80,10 @@ class HomeController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Video $video)
     {
         //
     }
@@ -87,10 +91,10 @@ class HomeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Video $video)
     {
         //
     }
