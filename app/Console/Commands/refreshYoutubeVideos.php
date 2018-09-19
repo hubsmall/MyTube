@@ -4,33 +4,30 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class youtubeVideoLoad extends Command
+class refreshYoutubeVideos extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'youtubeVideo:initiatePlaylists';
+    protected $signature = 'youtubeVideo:refresh';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'load all playlists from each chanel and add playlist_id for any video which belongs to any playlist';
-
-    protected $youTubeVideo;
+    protected $description = 'check for new videos on chanels, load them, link appropriate playlist';
 
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct(YouTubeVideo $yTv)
+    public function __construct()
     {
         parent::__construct();
-        $this->youTubeVideo = $yTv;
     }
 
     /**
@@ -40,6 +37,7 @@ class youtubeVideoLoad extends Command
      */
     public function handle()
     {
+        $this->youTubeVideo->allVideosToMiscellaneous();
         $this->youTubeVideo->setPlaylists();
         $this->youTubeVideo->checkForEmptyPlaylists();
     }

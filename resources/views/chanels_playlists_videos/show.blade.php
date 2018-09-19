@@ -17,6 +17,9 @@
                 <div class="video_player_date">Дата публикации: {{$video->DateNoTimeCarbon}}</div><br>
                 <div class="video_player_date">Описание: {{$video->description}}</div>
             </div>
+            <script src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js"></script>
+<script src="//yastatic.net/share2/share.js"></script>
+<div class="ya-share2" data-services="vkontakte,facebook,odnoklassniki,gplus,twitter"></div>
         </div>
  
 	@endif 

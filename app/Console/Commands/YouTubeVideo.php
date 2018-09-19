@@ -151,7 +151,7 @@ public function setPlaylists()
                  $youtubeVideoId = $playlistItem->contentDetails->videoId;           
                  $foundVideo = Video::where('youtube_id', $youtubeVideoId)->first();
                  if ($foundVideo != null) {          
-                    $foundVideo->playlist_id = $playlist->id;
+                    $foundVideo->playlist_id = $section->id;
                     $foundVideo->save();
                  }          
             } 

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+set_time_limit(0);
+
 use Illuminate\Database\Eloquent\Model;
 use App\DifInTime\DifInTime;
 use Carbon\Carbon;

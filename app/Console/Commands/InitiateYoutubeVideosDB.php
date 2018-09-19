@@ -4,21 +4,21 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class youtubeVideoLoad extends Command
+class InitiateYoutubeVideosDB extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'youtubeVideo:initiatePlaylists';
+    protected $signature = 'youtubeVideo:initiate';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'load all playlists from each chanel and add playlist_id for any video which belongs to any playlist';
+    protected $description = 'initiate chosen chanels with miscellaneous playlists for each. Load all videos from the chanel and add them to miscellaneous playlist';
 
     protected $youTubeVideo;
 
@@ -40,7 +40,7 @@ class youtubeVideoLoad extends Command
      */
     public function handle()
     {
-        $this->youTubeVideo->setPlaylists();
-        $this->youTubeVideo->checkForEmptyPlaylists();
+        $this->youTubeVideo->initialChanels();
+        $this->youTubeVideo->allVideosToMiscellaneous();
     }
 }
