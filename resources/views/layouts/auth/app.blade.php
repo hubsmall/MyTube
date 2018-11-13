@@ -33,16 +33,7 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    @if (count($chanels) > 0)
-                    <ul class="navbar-nav mr-auto">
-                        @foreach ($chanels as $chanel)
-                        <li class="nav-item">
-                             <a class="nav-link" href="{{ route('chanels.playlists.index', [ $chanel]) }}">{{$chanel->name}}</a>
-                        </li>
-                             
-                        @endforeach
-                    </ul>
-                    @endif
+                    
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">

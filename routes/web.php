@@ -11,6 +11,7 @@
 |
 */
 
+Auth::routes();
 
 Route::redirect('/', 'home', 301);
 
