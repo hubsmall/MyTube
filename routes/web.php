@@ -19,7 +19,10 @@ Route::resource('chanels.playlists', 'PlaylistController');
 Route::resource('chanels.playlists.videos', 'VideoController');
 Route::resource('chanels.videos', 'ChanelController');
 
+Route::get('admin.search', 'AdminChanelController@search');
+Route::get('admin.transaction', 'AdminChanelController@transaction');
 
 Route::apiResources([
     'home' => 'HomeController',
+    'admin' => 'AdminChanelController',
 ]);

@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-
 class Playlist extends Model
 {
+    use \Okipa\LaravelModelJsonStorage\ModelJsonStorage;
     
     protected $fillable = ['name', 'youtube_id', 'chanel_id'];
     

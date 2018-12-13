@@ -8,7 +8,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+    use \Okipa\LaravelModelJsonStorage\ModelJsonStorage;
+    
     use Notifiable;
+    
+    const ADMIN = 0;
 
     /**
      * The attributes that are mass assignable.
@@ -16,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'login', 'email', 'password', 'role'
     ];
 
     /**
@@ -27,4 +31,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+    
+    public function isAdmin()
+    {
+        return self::ADMIN === $this->role;
+    }
 }

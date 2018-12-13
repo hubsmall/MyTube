@@ -6,10 +6,11 @@
 	@if (count($playlists) > 0)
 	<div class="panel panel-default">  
 	    <div class="playlist_continer">
+                <div id="accordion">
 	    	@foreach ($playlists as $playlist)
 	    	<div class="playlist_item">
 	    		<div class="playlist_name"><span>{{$playlist->name}}</span></div>
-	    		<div class="video_continer">
+	    		<div class="video_continer">                           
 	    		@foreach ($playlist->limitedVideos as $video)	    		
 		    		<div class="video_item video_item_in_playlist">
 			    		<div class="video_element video_preview"><img src="{{$video->preview}}"></div>
@@ -25,7 +26,7 @@
 	    		</div>
 	    	</div>
 	    	@endforeach
-	    </div>
+	    </div></div>
 	</div>
 	@endif
 

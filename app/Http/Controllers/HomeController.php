@@ -7,8 +7,7 @@ use App\Models\Playlist;
 use App\Models\Chanel;
 use App\Models\Video;
 
-class HomeController extends Controller
-{
+class HomeController extends Controller {
     /**
      * Create a new controller instance.
      *
@@ -24,8 +23,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index() {
         $chanels = Chanel::all();
         $latestVideos = Video::with('playlist.chanel:id,name')->orderBy('original_date', 'desc')
                ->take(6)
@@ -35,5 +33,7 @@ class HomeController extends Controller
             'chanels' => $chanels,
             'latestVideos' => $latestVideos,
         ]);
+
     }
+
 }
