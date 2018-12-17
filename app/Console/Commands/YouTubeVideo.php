@@ -7,34 +7,42 @@ use App\Models\Video;
 use App\Models\Chanel;
 use Alaouy\Youtube\Facades\Youtube;
 use DateTime;
+use App\Console\Commands\JSONdbOperations;
 
 class YouTubeVideo {
 
-    public static function initialChanels($chanel_string) {
+    public static function initialChanels($chanel_string, $json) {
         $channelResult = Youtube::getChannelById($chanel_string)[0];
         $chanel = new Chanel;
         $chanel->name = $channelResult->snippet->title;
         $chanel->description = $channelResult->snippet->description;
         $chanel->youtube_id = $channelResult->id;
-        $chanel->save();
 
         $defaultPlaylist = new Playlist;
-        $defaultPlaylist->name = 'miscellaneous';
+        if ($json) {
+            $chanel = JSONdbOperations::addChanel($chanel);
+        } else {
+            $chanel->save();
+        }
         $defaultPlaylist->chanel_id = $chanel->id;
+        $defaultPlaylist->name = 'miscellaneous';
         $defaultPlaylist->youtube_id = null;
-        $defaultPlaylist->save();
-        
-        self::allVideosToMiscellaneous($chanel);
-        self::setPlaylists($chanel);
-        
-        return $chanel;
+
+        if ($json) {
+            JSONdbOperations::addPlaylist($defaultPlaylist);
+        } else {
+            $defaultPlaylist->save();
+        }
+
+        self::allVideosToMiscellaneous($chanel, $json);
+        self::setPlaylists($chanel, $json);
     }
 
     function cmp_function_asc($a, $b) {
         return ($a->snippet->publishedAt > $b->snippet->publishedAt);
     }
 
-    public static function allVideosToMiscellaneous($chanel) {
+    public static function allVideosToMiscellaneous($chanel, $json) {
 
         $params = array(
             'type' => 'video',
@@ -58,7 +66,13 @@ class YouTubeVideo {
 
         foreach ($videos as $video) {
             $youtubeId = $video->id->videoId;
-            $found = Video::where('youtube_id', $youtubeId)->exists();
+            $found = false;
+            if ($json) {
+                $found = JSONdbOperations::convertToVideo(JSONdbOperations::readFromJson('Video'))
+                        ->where('youtube_id', $youtubeId)->first(); 
+            } else {
+                $found = Video::where('youtube_id', $youtubeId)->exists();
+            }
             if (true === $found) {
                 continue;
             }
@@ -66,8 +80,8 @@ class YouTubeVideo {
             $video = new Video;
             $video->name = $videoInfo->snippet->title;
             $video->preview = $videoInfo->snippet->thumbnails->default->url;
-            $defaultPlaylist = Playlist::where('chanel_id', $chanel->id)->first();
-            $video->playlist_id = $defaultPlaylist->id;
+//            $defaultPlaylist = Playlist::where('chanel_id', $chanel->id)->first();
+//            $video->playlist_id = $defaultPlaylist->id;
             $video->description = $videoInfo->snippet->description;
             $video->player = $videoInfo->player->embedHtml;
 
@@ -76,7 +90,8 @@ class YouTubeVideo {
             $date = str_replace("T", " ", $dateStringPieces[0]);
             $format = 'Y-m-d H:i:s';
             $date = DateTime::createFromFormat($format, $date);
-            
+            $date = $date->format('Y-m-d H:i:s');
+
             $video->original_date = $date;
             $video->youtube_id = $videoInfo->id;
 
@@ -89,7 +104,16 @@ class YouTubeVideo {
                 }
                 $video->tags = $tagString;
             }
-            $video->save();
+            if ($json) {
+                $defaultPlaylist = JSONdbOperations::convertToPlaylist(JSONdbOperations::readFromJson('Playlist'))
+                        ->where('chanel_id', $chanel->id)->first();
+                $video->playlist_id = $defaultPlaylist->id;
+                JSONdbOperations::addVideo($video);
+            } else {
+                $defaultPlaylist = Playlist::where('chanel_id', $chanel->id)->first();
+                $video->playlist_id = $defaultPlaylist->id;
+                $video->save();
+            }
         }
     }
 
@@ -100,7 +124,7 @@ class YouTubeVideo {
         $this->checkForEmptyPlaylists();
     }
 
-    public static function setPlaylists($chanel) {
+    public static function setPlaylists($chanel, $json) {
 
         //get all the existing playlists from the chanel
         $params = [
@@ -119,16 +143,19 @@ class YouTubeVideo {
         //write all new playlists to db making parent_id chanel ID
         foreach ($playlists['results'] as $playlist) {
             $youtubeId = $playlist->id;
-            $found = Playlist::where('youtube_id', $youtubeId)->exists();
-            if (true === $found) {
-                continue;
-            }
+//            $found = Playlist::where('youtube_id', $youtubeId)->exists();
+//            if (true === $found) {
+//                continue;
+//            }
             $section = new Playlist;
             $section->name = $playlist->snippet->title;
             $section->chanel_id = $chanel->id;
             $section->youtube_id = $youtubeId;
-            $section->save();
-
+            if ($json) {
+                $section = JSONdbOperations::addPlaylist($section);
+            } else {
+                $section->save();
+            }
             $playlistItems = [];
             $playlistItemsTmp = Youtube::getPlaylistItemsByPlaylistId($playlist->id);
             $playlistItems = $playlistItemsTmp['results'];
@@ -140,12 +167,18 @@ class YouTubeVideo {
             }
             //uasort($playlistItems, array($this,'cmp_function_asc'));
             foreach ($playlistItems as $playlistItem) {
-
                 $youtubeVideoId = $playlistItem->contentDetails->videoId;
-                $foundVideo = Video::where('youtube_id', $youtubeVideoId)->first();
-                if ($foundVideo != null) {
-                    $foundVideo->playlist_id = $section->id;
-                    $foundVideo->save();
+                if ($json) {
+                    $foundVideo = JSONdbOperations::convertToVideo(JSONdbOperations::readFromJson('Video'))
+                            ->where('youtube_id', $youtubeVideoId)->first();
+                    $actualPlaylist_id = $section->id;
+                    JSONdbOperations::updateVideoPlayList($foundVideo,$actualPlaylist_id);
+                } else {
+                    $foundVideo = Video::where('youtube_id', $youtubeVideoId)->first();
+                    if ($foundVideo != null) {
+                        $foundVideo->playlist_id = $section->id;
+                        $foundVideo->save();
+                    }
                 }
             }
         }

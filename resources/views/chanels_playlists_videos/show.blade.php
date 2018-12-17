@@ -30,10 +30,12 @@
             <div class="video_player">
                 <div class="video_element video_preview"><img src="{{$randomVideo->preview}}"></div>
                 <div class="video_element video_name video_name_player">
-                    <a href="{{ route('chanels.videos.show', [ $randomVideo->playlist->chanel->id, $randomVideo]) }}">{{$randomVideo->name}}</a>
+                    <a href="{{url('chanels/'.$randomVideo->playlist->chanel->id.'/videos/'.$randomVideo->id) }}"
+                        >{{$randomVideo->name}}</a>
                 </div>             
                 <div class="video_element video_date">                  
-                    <a class="nav-link" href="{{ route('chanels.playlists.index', [ $randomVideo->playlist->chanel->id]) }}">
+                    <a class="nav-link"  href="{{url('chanels/'.$randomVideo->playlist->chanel->id.'/playlists') }}"
+               >
                     {{$randomVideo->playlist->chanel->name}}
                     </a>
                 </div>

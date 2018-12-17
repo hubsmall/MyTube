@@ -20,7 +20,8 @@
 	    		@endforeach
 	    			<div class="video_item video_item_in_playlist">
 			    		<div class="video_element video_name video_name_in_playlist">
-			    			<a class="nav-link" href="{{ route('chanels.playlists.videos.index', [ $playlist->chanel_id, $playlist]) }}">Все видео</a>
+			    			<a class="nav-link" href="{{url('chanels/'. $playlist->chanel_id.'/playlists/'.$playlist->id.'/videos') }}"
+                                                   >Все видео</a>
 			    		</div>
 		    		</div>
 	    		</div>

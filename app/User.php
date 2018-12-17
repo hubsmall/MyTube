@@ -8,8 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use \Okipa\LaravelModelJsonStorage\ModelJsonStorage;
-    
+   
     use Notifiable;
     
     const ADMIN = 0;

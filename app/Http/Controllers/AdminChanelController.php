@@ -10,6 +10,7 @@ use Alaouy\Youtube\Facades\Youtube;
 use DateTime;
 use App\Console\Commands\YouTubeVideo;
 use App\Console\Commands\YouTubeVideoForShow;
+use App\Console\Commands\JSONdbOperations;
 
 class AdminChanelController extends Controller {
 
@@ -18,8 +19,12 @@ class AdminChanelController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
-        $chanels = Chanel::all();
+    public function index() {          
+        try {
+            $chanels = Chanel::all();            
+        } catch (\Exception $e) {
+            $chanels = JSONdbOperations::allChanels();
+        }
         return view('admin_chanel.index', [
             'chanels' => $chanels,
         ]);
@@ -27,27 +32,30 @@ class AdminChanelController extends Controller {
 
     public function transaction(Request $request) {
         $answer = $request->input();
-        YouTubeVideo::initialChanels($answer);
+        try {
+            YouTubeVideo::initialChanels($answer,false);           
+        } catch (\Exception $e) {
+            YouTubeVideo::initialChanels($answer,true);
+        }
         return redirect('/');
     }
 
     public function search(Request $request) {
-        
-        $chanels = Chanel::all();
         $playlists = null;
-        
+        $videos = null;
         $chanel_query = $request->input();
         $channelResult = Youtube::getChannelById($chanel_query);
-        if ($channelResult) {
-            
+        try {
+            $chanels = Chanel::all();            
+        } catch (\Exception $e) {
+            $chanels = JSONdbOperations::allChanels();
+        }
+        if ($channelResult) {           
             $channelResult = $channelResult[0];
             YouTubeVideoForShow::initialChanels($chanel_query);
             $videos = YouTubeVideoForShow::$videosG;
             $playlists =  YouTubeVideoForShow::$playlistsG;
-
-           // $playlists = Playlist::with('videos')->where('chanel_id', $chanel->id)->get();
         }
-
         return view('admin_chanel.search', [
             'chanels' => $chanels,
             'channelResult' => $channelResult,

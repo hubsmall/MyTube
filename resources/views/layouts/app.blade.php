@@ -8,7 +8,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
-    
+
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}" defer></script>
 
@@ -38,7 +38,8 @@
                         <ul class="navbar-nav mr-auto">
                             @foreach ($chanels as $chanel)
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('chanels.playlists.index', [ $chanel]) }}">{{$chanel->name}}</a>
+                                <a class="nav-link" href="{{url('chanels/'. $chanel->id.'/playlists') }}"
+                                   >{{$chanel->name}}</a>
                             </li>
 
                             @endforeach
@@ -49,9 +50,21 @@
                         <ul class="navbar-nav ml-auto">
                             <!-- Authentication Links -->
                             @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    {{ __('Login') }} <span class="caret"></span>
+                                </a>
+
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('login') }}">{{ __('Login') }}
+                                    </a>
+                                   
+                                    <a class="dropdown-item" href="{{ route('admin.index') }}">                                 
+                                        {{ __('Admin panel') }}                                      
+                                    </a>                                                
+                                </div>
                             </li>
+                         
                             <!--                            <li class="nav-item">
                                                             <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                                                         </li>-->
@@ -64,7 +77,7 @@
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
-                                               document.getElementById('logout-form').submit();">
+    document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
                                     @if(Auth::user()->isAdmin())

@@ -61,7 +61,7 @@ class YouTubeVideoForShow {
             $video = new Video;
             $video->name = $videoInfo->snippet->title;
             $video->preview = $videoInfo->snippet->thumbnails->default->url;
-            $defaultPlaylist = Playlist::where('chanel_id', $chanel->id)->first();
+//            $defaultPlaylist = Playlist::where('chanel_id', $chanel->id)->first();
 //            $video->playlist_id = $defaultPlaylist->id;
             $video->description = $videoInfo->snippet->description;
             $video->player = $videoInfo->player->embedHtml;

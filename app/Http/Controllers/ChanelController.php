@@ -7,6 +7,7 @@ use App\Models\Chanel;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Alaouy\Youtube\Facades\Youtube;
+use App\Console\Commands\JSONdbOperations;
 
 
 class ChanelController extends Controller
@@ -52,10 +53,18 @@ class ChanelController extends Controller
      * @param  \App\Models\Chanel  $chanel
      * @return \Illuminate\Http\Response
      */
-    public function show(Chanel $chanel, Video $video)
+    public function show($chanelId, $videoId)
     {
-        $chanels = Chanel::all();
-        $randomVideos = Video::with('playlist.chanel:id,name')->orderBy(\DB::raw('RAND()'))->take(6)->get();
+        try {
+            $chanels = Chanel::all();
+            $randomVideos = Video::with('playlist.chanel:id,name')->orderBy(\DB::raw('RAND()'))->take(6)->get();
+            $video = Video::where('id', $videoId)->first();
+        } catch (\Exception $e) {
+            $chanels = JSONdbOperations::allChanels();
+            $randomVideos = JSONdbOperations::randomVideos();          
+            $video = JSONdbOperations::convertToVideo(JSONdbOperations::readFromJson('Video'))
+                    ->where('id', $videoId)->first();
+        }
         return view('chanels_playlists_videos.show', [
             'chanels' => $chanels,
             'video' => $video,

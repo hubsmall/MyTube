@@ -6,19 +6,27 @@ use App\Models\Playlist;
 use App\Models\Chanel;
 use App\Models\Video;
 use Illuminate\Http\Request;
+use App\Console\Commands\JSONdbOperations;
 
-class VideoController extends Controller
-{
+class VideoController extends Controller {
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Chanel $chanel, Playlist $playlist)
-    {
-        $chanels = Chanel::all();
-        $videos = Video::where('playlist_id', $playlist->id)->orderBy('original_date', 'desc')->get();
-
+    public function index($chanelId, $playlistId) {
+        try {
+            $chanels = Chanel::all();
+            $videos = Video::where('playlist_id', $playlistId)->orderBy('original_date', 'desc')->get();
+            $playlist = Playlist::where('id', $playlistId)->first();
+        } catch (\Exception $e) {
+            $chanels = JSONdbOperations::allChanels();
+            $videos = JSONdbOperations::convertToVideo(JSONdbOperations::readFromJson('Video'))
+                    ->where('playlist_id', $playlistId)->sortByDesc('original_date')->values();
+            $playlist = JSONdbOperations::convertToPlaylist(JSONdbOperations::readFromJson('Playlist'))
+                    ->where('id', $playlistId)->first();
+        }
         return view('chanels_playlists_videos.index', [
             'chanels' => $chanels,
             'videos' => $videos,
@@ -31,8 +39,7 @@ class VideoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create() {
         //
     }
 
@@ -42,8 +49,7 @@ class VideoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         //
     }
 
@@ -53,10 +59,20 @@ class VideoController extends Controller
      * @param  \App\Models\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function show(Chanel $chanel, Playlist $playlist, Video $video)
-    {
-        $chanels = Chanel::all();
-        $randomVideos = Video::with('playlist.chanel:id,name')->orderBy(\DB::raw('RAND()'))->take(6)->get();
+    public function show($chanelId, $playlistId, $videoId) {
+        try {
+            $chanels = Chanel::all();
+            $randomVideos = Video::with('playlist.chanel:id,name')->orderBy(\DB::raw('RAND()'))->take(6)->get();
+            $playlist = Playlist::where('id', $playlistId)->first();
+            $video = Video::where('id', $videoId)->first();
+        } catch (\Exception $e) {
+            $chanels = JSONdbOperations::allChanels();
+            $randomVideos = JSONdbOperations::randomVideos();
+            $playlist = JSONdbOperations::convertToPlaylist(JSONdbOperations::readFromJson('Playlist'))
+                    ->where('id', $playlistId)->first();
+            $video = JSONdbOperations::convertToVideo(JSONdbOperations::readFromJson('Video'))
+                    ->where('id', $videoId)->first();
+        }
         return view('chanels_playlists_videos.show', [
             'chanels' => $chanels,
             'video' => $video,
@@ -71,8 +87,7 @@ class VideoController extends Controller
      * @param  \App\Models\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function edit(Video $video)
-    {
+    public function edit(Video $video) {
         //
     }
 
@@ -83,8 +98,7 @@ class VideoController extends Controller
      * @param  \App\Models\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Video $video)
-    {
+    public function update(Request $request, Video $video) {
         //
     }
 
@@ -94,8 +108,8 @@ class VideoController extends Controller
      * @param  \App\Models\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Video $video)
-    {
+    public function destroy(Video $video) {
         //
     }
+
 }

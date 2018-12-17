@@ -24,7 +24,7 @@ class AppServiceProvider extends ServiceProvider {
     public function register() {
         // laravel model json storage
 // https://github.com/Okipa/laravel-model-json-storage
-        $this->app->register(\Okipa\LaravelModelJsonStorage\ModelJsonStorageServiceProvider::class);
+        //$this->app->register(\Okipa\LaravelModelJsonStorage\ModelJsonStorageServiceProvider::class);
     }
 
 }

@@ -9,9 +9,7 @@ use App\DifInTime\DifInTime;
 use Carbon\Carbon;
 
 class Video extends Model
-{
-    use \Okipa\LaravelModelJsonStorage\ModelJsonStorage;
-    
+{ 
     protected $fillable = ['name', 'preview', 'playlist_id', 'description', 'player',  'tags', 'original_date', 'youtube_id'];
     
     public function playlist() {

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Playlist;
 use App\Models\Chanel;
 use App\Models\Video;
+use App\Console\Commands\JSONdbOperations;
 
 class HomeController extends Controller {
     /**
@@ -24,16 +25,21 @@ class HomeController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $chanels = Chanel::all();
-        $latestVideos = Video::with('playlist.chanel:id,name')->orderBy('original_date', 'desc')
-               ->take(6)
-               ->get();
-  
+        
+        try {
+            $chanels = Chanel::all();
+            $latestVideos = Video::with('playlist.chanel:id,name')->orderBy('original_date', 'desc')
+                    ->take(6)
+                    ->get();          
+        } catch (\Exception $e) {
+            $chanels = JSONdbOperations::allChanels();
+            $latestVideos = JSONdbOperations::latestVideos();
+        }
+       
         return view('home.index', [
             'chanels' => $chanels,
             'latestVideos' => $latestVideos,
         ]);
-
     }
 
 }
