@@ -19,9 +19,10 @@ class AdminChanelController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {          
+    public function index() {
         try {
-            $chanels = Chanel::all();            
+            $chanels = Chanel::all();
+            //$chanels = Chanel::with('playlists.videos')->get();
         } catch (\Exception $e) {
             $chanels = JSONdbOperations::allChanels();
         }
@@ -33,9 +34,9 @@ class AdminChanelController extends Controller {
     public function transaction(Request $request) {
         $answer = $request->input();
         try {
-            YouTubeVideo::initialChanels($answer,false);           
+            YouTubeVideo::initialChanels($answer, false);
         } catch (\Exception $e) {
-            YouTubeVideo::initialChanels($answer,true);
+            YouTubeVideo::initialChanels($answer, true);
         }
         return redirect('/');
     }
@@ -46,15 +47,15 @@ class AdminChanelController extends Controller {
         $chanel_query = $request->input();
         $channelResult = Youtube::getChannelById($chanel_query);
         try {
-            $chanels = Chanel::all();            
+            $chanels = Chanel::all();
         } catch (\Exception $e) {
             $chanels = JSONdbOperations::allChanels();
         }
-        if ($channelResult) {           
+        if ($channelResult) {
             $channelResult = $channelResult[0];
             YouTubeVideoForShow::initialChanels($chanel_query);
             $videos = YouTubeVideoForShow::$videosG;
-            $playlists =  YouTubeVideoForShow::$playlistsG;
+            $playlists = YouTubeVideoForShow::$playlistsG;
         }
         return view('admin_chanel.search', [
             'chanels' => $chanels,
@@ -89,8 +90,19 @@ class AdminChanelController extends Controller {
      * @param  \App\Models\Chanel  $chanel
      * @return \Illuminate\Http\Response
      */
-    public function show(Chanel $chanel) {
-        //
+    public function show($chanelId) {
+        try {
+            $chanels = Chanel::all();
+            $chanel = Chanel::where('id', $chanelId)->first();
+        } catch (\Exception $e) {
+            $chanels = JSONdbOperations::allChanels();
+            $chanel = JSONdbOperations::convertToChanel(JSONdbOperations::readFromJson('Chanel'))
+                    ->where('id', $chanelId)->first();
+        }
+        return view('admin_chanel.show', [
+            'chanels' => $chanels,
+            'chanel' => $chanel,
+        ]);
     }
 
     /**
@@ -110,8 +122,13 @@ class AdminChanelController extends Controller {
      * @param  \App\Models\Chanel  $chanel
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Chanel $chanel) {
-        //
+    public function updatechanel(Request $request) {
+        $chanel = Chanel::where('id', $request->id)->first();
+        $chanel->name = $request->name;
+        $chanel->description = $request->description;
+        $chanel->save ();
+        return response()->json($chanel);
+
     }
 
     /**

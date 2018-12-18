@@ -19,6 +19,8 @@ Route::get('chanels/{id}/playlists','PlaylistController@index');
 Route::get('chanels/{id}/playlists/{id2}/videos','VideoController@index');
 Route::get('chanels/{id}/playlists/{id2}/videos/{id3}','VideoController@show');
 Route::get('chanels/{id}/videos/{id2}','ChanelController@show');
+Route::get('admin/{id}','AdminChanelController@show');
+Route::post('admin/updatechanel', 'AdminChanelController@updatechanel');
 
 //Route::resource('chanels.playlists', 'PlaylistController');
 Route::resource('chanels.playlists.videos', 'VideoController');
