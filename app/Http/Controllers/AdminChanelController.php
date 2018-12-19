@@ -97,7 +97,7 @@ class AdminChanelController extends Controller {
         } catch (\Exception $e) {
             $chanels = JSONdbOperations::allChanels();
             $chanel = JSONdbOperations::convertToChanel(JSONdbOperations::readFromJson('Chanel'))
-                    ->where('id', $chanelId)->first();
+                            ->where('id', $chanelId)->first();
         }
         return view('admin_chanel.show', [
             'chanels' => $chanels,
@@ -126,9 +126,8 @@ class AdminChanelController extends Controller {
         $chanel = Chanel::where('id', $request->id)->first();
         $chanel->name = $request->name;
         $chanel->description = $request->description;
-        $chanel->save ();
+        $chanel->save();
         return response()->json($chanel);
-
     }
 
     /**
@@ -137,8 +136,10 @@ class AdminChanelController extends Controller {
      * @param  \App\Models\Chanel  $chanel
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Chanel $chanel) {
-        //
+    public function destroy(Request $request) {
+        $chanel = Chanel::where('id', $request->id)->first();
+        $chanel->delete();
+        return response()->json();
     }
 
 }

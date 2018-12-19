@@ -24,16 +24,38 @@
             </div>
         </form>
         <h4>Current Chanels</h4>
-        @if (count($chanels) > 0)
-        <ul>
-            @foreach ($chanels as $chanel)
-            <li  class="chanelInList{{$chanel->id}}">
-                <span data-chanelid="{{$chanel->id}}" data-chanelname="{{$chanel->name}}" 
+        @if (count($chanels) > 0)        
+        <table class="table table-striped task-table">
+            <thead><th>Current Chanels</th></thead>
+            <tbody>
+                @foreach ($chanels as $chanel)
+                <tr class="table-text chanelInList{{$chanel->id}}">
+                    <td>
+                        <div>{{ $chanel->name }}</div>                     
+                    </td>
+                    <td>                   
+                        <button data-chanelid="{{$chanel->id}}" data-chanelname="{{$chanel->name}}" 
                       data-chaneldescription="{{$chanel->description}}"
-                      class="chanel_click">{{$chanel->name}}</span> 
-            </li>
-            @endforeach
-        </ul>
+                            type="submit" class="btn btn-danger">
+                            <i class="fa fa-btn fa-trash"></i>Delete
+                        </button>                       
+                    </td>
+                    <td>                               
+                        <button data-chanelid="{{$chanel->id}}" data-chanelname="{{$chanel->name}}" 
+                      data-chaneldescription="{{$chanel->description}}"
+                            type="submit" class="btn btn-info">
+                            <i class="fa fa-btn fa-trash"></i>Update
+                        </button>                    
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+
+
+
+
         @endif  
     </div>
 </div>
@@ -63,7 +85,7 @@
                     </div>
                 </form>
                 <div class="deleteContent">
-                    Are you Sure you want to delete <span class="dname"></span> ? <span
+                    Are you Sure you want to delete <span class="dname"></span> ? <span style="display: none;"
                         class="hidden did"></span>
                 </div>
                 <div class="modal-footer">
