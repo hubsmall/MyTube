@@ -52,13 +52,13 @@
                         <label class="control-label col-sm-2" for="chanelname">Name:</label>
                         <div class="col-sm-10">
                             <input type="text" name="chanelid" hidden=""  id="chanelI">                          
-                            <input type="text" name="chanelname" class="form-control" id="chanelN">
+                            <input type="text" name="chanelname" class="form-control inputValidation" id="chanelN">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="chaneldescription">Description:</label>
                         <div class="col-sm-10">
-                            <textarea rows="7"  name="chaneldescription" class="form-control" id="chanelD"></textarea>
+                            <textarea rows="7"  name="chaneldescription" class="form-control inputValidation" id="chanelD"></textarea>
                         </div>
                     </div>
                 </form>

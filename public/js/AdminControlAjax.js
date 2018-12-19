@@ -13,8 +13,24 @@ $(document).ready(function () {
         $('.form-horizontal').show();
         $('#chanelI').val($(this).data('chanelid'));
         $('#chanelD').val($(this).data('chaneldescription'));
-        $('#chanelN').val($(this).data('chanelname'));      
+        $('#chanelN').val($(this).data('chanelname'));
         $('#myModal').modal('show');
+        
+        var nameInput = $('#chanelN').val();
+        var descriptionInput = $('#chanelD').val();
+        if (nameInput < 3) {
+            $('#chanelN').css("border", "2px solid red");
+        }   
+        else {
+            $('#chanelN').css("border", "2px solid green");
+        }
+        if (descriptionInput < 3) {
+            $('#chanelD').css("border", "2px solid red");
+        }   
+        else {
+            $('#chanelD').css("border", "2px solid green");
+        }
+        
     });
 
 
@@ -31,7 +47,7 @@ $(document).ready(function () {
                 '_token': $('input[name=_token]').val(),
                 'id': $('#chanelI').val(),
                 'name': $('#chanelN').val(),
-                'description': $("#chanelD").val(),               
+                'description': $("#chanelD").val(),
             },
             success: function (data) {
                 $('.chanelInList' + data.id).replaceWith("<li class='chanelInList" +
@@ -42,6 +58,22 @@ $(document).ready(function () {
         });
 
     });
+    $(".inputValidation").change(function () {
+        var valueLength = this.value.length;
+        if (valueLength < 3) {
+            $(this).css("border", "2px solid red");
+        }   
+        else {
+            $(this).css("border", "2px solid green");
+        }
+        //alert($('#chanelN').val().length+"----"+$('#chanelD').val().length);    
+        if ($('#chanelN').val().length < 3 || $('#chanelD').val().length < 3) {
+            $('.actionBtn').prop('disabled', true);
+        }   
+        else {
+            $('.actionBtn').prop('disabled', false);
+        }
+    }).trigger("change");
 
 
 
