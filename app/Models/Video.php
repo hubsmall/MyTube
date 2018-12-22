@@ -24,9 +24,7 @@ class Video extends Model
         return $dt->diffForHumans();
     }
     public function getDateNoTimeCarbonAttribute() {
-    	Carbon::setLocale('ru');
-    	$dt = Carbon::createFromFormat('Y-m-d H:i:s', $this->original_date); 
-        return $dt->toDateString();
+        return date('d-m-Y', strtotime($this->original_date));
     }
     
 }

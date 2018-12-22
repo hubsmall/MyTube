@@ -20,10 +20,11 @@ class AdminChanelController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        try {
+
+        $dataAccess = getDataAccess();
+        if ($dataAccess) {
             $chanels = Chanel::all();
-            //$chanels = Chanel::with('playlists.videos')->get();
-        } catch (\Exception $e) {
+        } else {
             $chanels = JSONdbOperations::allChanels();
         }
         return view('admin_chanel.index', [
@@ -33,9 +34,10 @@ class AdminChanelController extends Controller {
 
     public function transaction(Request $request) {
         $answer = $request->input();
-        try {
+        $dataAccess = getDataAccess();
+        if ($dataAccess) {
             YouTubeVideo::initialChanels($answer, false);
-        } catch (\Exception $e) {
+        } else {
             YouTubeVideo::initialChanels($answer, true);
         }
         return redirect('/');
@@ -46,9 +48,10 @@ class AdminChanelController extends Controller {
         $videos = null;
         $chanel_query = $request->input();
         $channelResult = Youtube::getChannelById($chanel_query);
-        try {
+        $dataAccess = getDataAccess();
+        if ($dataAccess) {
             $chanels = Chanel::all();
-        } catch (\Exception $e) {
+        } else {
             $chanels = JSONdbOperations::allChanels();
         }
         if ($channelResult) {
@@ -91,10 +94,11 @@ class AdminChanelController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show($chanelId) {
-        try {
+        $dataAccess = getDataAccess();
+        if ($dataAccess) {
             $chanels = Chanel::all();
             $chanel = Chanel::where('id', $chanelId)->first();
-        } catch (\Exception $e) {
+        } else {
             $chanels = JSONdbOperations::allChanels();
             $chanel = JSONdbOperations::convertToChanel(JSONdbOperations::readFromJson('Chanel'))
                             ->where('id', $chanelId)->first();
@@ -123,9 +127,13 @@ class AdminChanelController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function updatechanel(Request $request) {
+        $validatedData = $request->validate([
+            'name' => 'required|unique:chanels|min:3',
+            'description' => 'required|min:3',
+        ]);
         $chanel = Chanel::where('id', $request->id)->first();
-        $chanel->name = $request->name;
-        $chanel->description = $request->description;
+        $chanel->name = $validatedData->name;
+        $chanel->description = $validatedData->description;
         $chanel->save();
         return response()->json($chanel);
     }

@@ -16,11 +16,12 @@ class VideoController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index($chanelId, $playlistId) {
-        try {
+        $dataAccess = getDataAccess();
+        if ($dataAccess) {
             $chanels = Chanel::all();
             $videos = Video::where('playlist_id', $playlistId)->orderBy('original_date', 'desc')->get();
             $playlist = Playlist::where('id', $playlistId)->first();
-        } catch (\Exception $e) {
+        } else {
             $chanels = JSONdbOperations::allChanels();
             $videos = JSONdbOperations::convertToVideo(JSONdbOperations::readFromJson('Video'))
                     ->where('playlist_id', $playlistId)->sortByDesc('original_date')->values();
@@ -60,12 +61,13 @@ class VideoController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show($chanelId, $playlistId, $videoId) {
-        try {
+        $dataAccess = getDataAccess();
+        if ($dataAccess) {
             $chanels = Chanel::all();
             $randomVideos = Video::with('playlist.chanel:id,name')->orderBy(\DB::raw('RAND()'))->take(6)->get();
             $playlist = Playlist::where('id', $playlistId)->first();
             $video = Video::where('id', $videoId)->first();
-        } catch (\Exception $e) {
+        } else {
             $chanels = JSONdbOperations::allChanels();
             $randomVideos = JSONdbOperations::randomVideos();
             $playlist = JSONdbOperations::convertToPlaylist(JSONdbOperations::readFromJson('Playlist'))

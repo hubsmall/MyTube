@@ -26,12 +26,13 @@ class HomeController extends Controller {
      */
     public function index() {
         
-        try {
+        $dataAccess = getDataAccess();
+        if ($dataAccess) {
             $chanels = Chanel::all();
             $latestVideos = Video::with('playlist.chanel:id,name')->orderBy('original_date', 'desc')
                     ->take(6)
                     ->get();          
-        } catch (\Exception $e) {
+        } else {
             $chanels = JSONdbOperations::allChanels();
             $latestVideos = JSONdbOperations::latestVideos();
         }

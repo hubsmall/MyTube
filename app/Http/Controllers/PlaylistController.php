@@ -11,10 +11,11 @@ use App\Console\Commands\JSONdbOperations;
 class PlaylistController extends Controller {
 
     public function index($chanelId) {
-        try {
+        $dataAccess = getDataAccess();
+        if ($dataAccess) {
             $chanels = Chanel::all();
             $playlists = Playlist::where('chanel_id', $chanelId)->get();
-        } catch (\Exception $e) {
+        } else {
             $chanels = JSONdbOperations::allChanels();
             $playlists = JSONdbOperations::chanelPlaylists($chanelId);
         }

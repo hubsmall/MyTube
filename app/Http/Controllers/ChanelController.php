@@ -55,11 +55,12 @@ class ChanelController extends Controller
      */
     public function show($chanelId, $videoId)
     {
-        try {
+        $dataAccess = getDataAccess();
+        if ($dataAccess) {
             $chanels = Chanel::all();
             $randomVideos = Video::with('playlist.chanel:id,name')->orderBy(\DB::raw('RAND()'))->take(6)->get();
             $video = Video::where('id', $videoId)->first();
-        } catch (\Exception $e) {
+        } else {
             $chanels = JSONdbOperations::allChanels();
             $randomVideos = JSONdbOperations::randomVideos();          
             $video = JSONdbOperations::convertToVideo(JSONdbOperations::readFromJson('Video'))
